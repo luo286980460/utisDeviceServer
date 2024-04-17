@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class MyHttpServer;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -16,6 +18,11 @@ public:
     ~Widget();
 
 private:
+    void init();
+    void initHttpServer();
+
+private:
     Ui::Widget *ui;
+    MyHttpServer* m_httpServer;
 };
 #endif // WIDGET_H
