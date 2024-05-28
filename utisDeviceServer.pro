@@ -1,8 +1,13 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
+
+msvc {
+    QMAKE_CFLAGS += /utf-8
+    QMAKE_CXXFLAGS += /utf-8
+}
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -12,9 +17,12 @@ SOURCES += \
     main.cpp \
     myhttpserver.cpp \
     myhttpserverworker.cpp \
+    utisDevice.cpp \
+    utisDeviceWorker.cpp \
     widget.cpp
 
 HEADERS += \
+    header.h \
     include/AsyncHttpClient.h \
     include/Buffer.h \
     include/Channel.h \
@@ -86,6 +94,8 @@ HEADERS += \
     include/wsdef.h \
     myhttpserver.h \
     myhttpserverworker.h \
+    utisDevice.h \
+    utisDeviceWorker.h \
     widget.h
 
 FORMS += \
@@ -100,3 +110,6 @@ win32: LIBS += -L$$PWD/lib/ -lhv
 
 INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD/include
+
+RESOURCES += \
+    qrc.qrc

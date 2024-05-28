@@ -1,16 +1,12 @@
 #include "myhttpserverworker.h"
-#include "include/HttpServer.h"
 #include "include/hthread.h"    // import hv_gettid
 #include "include/hasync.h"     // import hv::async
 
 #include <QSettings>
 #include <QCoreApplication>
 #include <QDebug>
-#include <QJsonObject>
 #include <QJsonDocument>
 #include <QUrlQuery>
-
-using namespace hv;
 
 #define TEST_HTTPS 0
 
@@ -24,8 +20,6 @@ void MyHttpServerWorker::slotStart()
 {
     HV_MEMCHECK;
 
-    HttpService router;
-
     router.Static("/", "./html");
     router.EnableForwardProxy();
     router.AddTrustProxy("*httpbin.org");
@@ -37,39 +31,8 @@ void MyHttpServerWorker::slotStart()
     router.POST("/Weather/GetInfo", [=](HttpRequest* req, HttpResponse* resp) {Q_UNUSED(req);
         qDebug() << "req: " << QJsonDocument::fromJson(QString::fromStdString(req->Body()).toLocal8Bit());
 
-
-
-        Json ex3 = {
-            {"Res", "/"},
-            {"FengXiang", "/"},
-            {"FengSu", "/"},
-            {"JiangYuLiang", "/"},
-            {"NengJianDu", "/"},
-            {"ShiDu", "/"},
-            {"QiYa", "/"},
-            {"HuanJingWenDu", "/"},
-            {"FuBingHouDu", "/"},
-            {"LuMianWenDu", "/"},
-            {"ShiHuaXiShu", "/"},
-            {"LuMianZhuangTai", "/"},
-            {"FuXueHouDu", "/"},
-            {"YingJianZhuangTai", "/"},
-            {"ShuiMoHouDu", "/"},
-        };
-        return resp->Json(ex3);
-    });
-
-
-
-
-    // curl -v http://ip:port/DEVICE/DEBUG/reboot
-    router.POST("/DEVICE/DEBUG/reboot", [=](HttpRequest* req, HttpResponse* resp) {Q_UNUSED(req);
-        /*发出信号，2s以后重启*/
-        return resp->String("reboot");
-    });
-    router.POST("/DEVICE/DEBUG/poweroff", [=](HttpRequest* req, HttpResponse* resp) {Q_UNUSED(req);
-        /*发出信号，2s以后关机*/
-        return resp->String("poweroff");
+        //qDebug() << m_weatherData;
+        return resp->String(m_weatherData.data());
     });
 
     // curl -v http://ip:port/echo -d "hello,world!"
@@ -104,7 +67,7 @@ void MyHttpServerWorker::slotStart()
     });
 
     // curl -v http://ip:port/paths
-    router.GET("/paths", [&router](HttpRequest* req, HttpResponse* resp) {Q_UNUSED(req);
+    router.GET("/paths", [=](HttpRequest* req, HttpResponse* resp) {Q_UNUSED(req);
         return resp->Json(router.Paths());
     });
 
@@ -141,7 +104,6 @@ void MyHttpServerWorker::slotStart()
         return HTTP_STATUS_NEXT;
     });
 
-    HttpServer server;
     server.service = &router;
     server.port = m_port;
 #if TEST_HTTPS
@@ -165,6 +127,11 @@ void MyHttpServerWorker::slotStart()
     server.start();
 
     // press Enter to stop
-    while (getchar() != '\n');
-    hv::async::cleanup();
+//    while (getchar() != '\n');
+//    hv::async::cleanup();
+}
+
+void MyHttpServerWorker::slotDataUpdate(QByteArray jsonData)
+{
+    m_weatherData = jsonData;
 }

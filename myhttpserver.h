@@ -9,6 +9,7 @@ class MyHttpServerWorker;
 class MyHttpServer : public QObject
 {
     Q_OBJECT
+
 public:
     explicit MyHttpServer(QObject *parent = nullptr);
     ~MyHttpServer();
@@ -18,6 +19,7 @@ public:
 
 signals:
     void signalStart();
+    void signalDataUpdate(QByteArray jsonData);
 
 private:
     QThread m_workerThread;
