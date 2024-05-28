@@ -6,7 +6,6 @@
 #include <QSettings>
 #include <QCoreApplication>
 #include <QDebug>
-#include <QJsonObject>
 #include <QJsonDocument>
 #include <QUrlQuery>
 
@@ -18,6 +17,24 @@ MyHttpServerWorker::MyHttpServerWorker(QObject *parent)
     : QObject{parent}
 {
 
+}
+
+void MyHttpServerWorker::initWeatherData()
+{
+    m_weatherData.insert("fengXiang","/");          // 风向
+    m_weatherData.insert("fengSu","/");             // 风速
+    m_weatherData.insert("jiangYuLiang","/");       // 降雨量
+    m_weatherData.insert("nengJianDu","/");         // 能见度
+    m_weatherData.insert("shiDu","/");              // 湿度
+    m_weatherData.insert("qiYa","/");               // 气压
+    m_weatherData.insert("huanJingWenDu","/");      // 环境温度
+    m_weatherData.insert("fuBingHouDu","/");        // 覆冰厚度
+    m_weatherData.insert("luMianWenDu","/");        // 路面温度
+    m_weatherData.insert("shiHuaXiShu","/");        // 湿滑系数
+    m_weatherData.insert("luMianZhuangTai","/");    // 路面状态
+    m_weatherData.insert("fuXueHouDu","/");         // 覆雪厚度
+    m_weatherData.insert("yingJianZhuangTai","/");  // 硬件状态
+    m_weatherData.insert("suhiMoHouDu","/");        // 水膜厚度
 }
 
 void MyHttpServerWorker::slotStart()
@@ -56,7 +73,8 @@ void MyHttpServerWorker::slotStart()
             {"YingJianZhuangTai", "/"},
             {"ShuiMoHouDu", "/"},
         };
-        return resp->Json(ex3);
+        //return resp->Json(ex3);//m_weatherData
+        return resp->String(QJsonDocument(m_weatherData).toJson().data());
     });
 
 

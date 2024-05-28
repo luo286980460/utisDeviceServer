@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/icons/offline.png</file>
+        <file>resources/icons/online.png</file>
+        <file>resources/icons/reconnect.png</file>
+        <file>resources/icons/equipInfo.png</file>
+    </qresource>
+</RCC>

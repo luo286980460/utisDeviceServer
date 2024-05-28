@@ -2,6 +2,7 @@
 #define MYHTTPSERVERWORKER_H
 
 #include <QObject>
+#include <QJsonObject>
 
 typedef enum{
     Weather,
@@ -14,6 +15,9 @@ class MyHttpServerWorker : public QObject
 public:
     explicit MyHttpServerWorker(QObject *parent = nullptr);
 
+private:
+    void initWeatherData();
+
 signals:
 
 public slots:
@@ -21,7 +25,7 @@ public slots:
 
 private:
     int m_port = 2333;
-
+    QJsonObject m_weatherData;
 };
 
 #endif // MYHTTPSERVERWORKER_H

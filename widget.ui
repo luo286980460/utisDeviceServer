@@ -7,12 +7,35 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>574</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
+  <widget class="QPlainTextEdit" name="history">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>429</y>
+     <width>780</width>
+     <height>121</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="clearBtn">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>550</y>
+     <width>60</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>clear</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
