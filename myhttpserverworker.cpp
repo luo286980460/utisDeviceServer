@@ -16,6 +16,11 @@ MyHttpServerWorker::MyHttpServerWorker(QObject *parent)
 
 }
 
+MyHttpServerWorker::~MyHttpServerWorker()
+{
+    hv::async::cleanup();
+}
+
 void MyHttpServerWorker::slotStart()
 {
     HV_MEMCHECK;
@@ -28,8 +33,15 @@ void MyHttpServerWorker::slotStart()
     /*          POST            */
 
     // 气象
-    router.POST("/Weather/GetInfo", [=](HttpRequest* req, HttpResponse* resp) {Q_UNUSED(req);
-        qDebug() << "req: " << QJsonDocument::fromJson(QString::fromStdString(req->Body()).toLocal8Bit());
+//    router.POST("/Weather", [=](HttpRequest* req, HttpResponse* resp) {Q_UNUSED(req);
+//        qDebug() << "req: " << QJsonDocument::fromJson(QString::fromStdString(req->Body()).toLocal8Bit());
+
+//        //qDebug() << m_weatherData;
+//        return resp->String(m_weatherData.data());
+//    });
+
+    router.GET("/GetWeatherData", [=](HttpRequest* req, HttpResponse* resp) {Q_UNUSED(req);
+        //qDebug() << "req: " << QJsonDocument::fromJson(QString::fromStdString(req->Body()).toLocal8Bit());
 
         //qDebug() << m_weatherData;
         return resp->String(m_weatherData.data());

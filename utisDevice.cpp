@@ -12,6 +12,7 @@ utisDevice::utisDevice(QObject *parent)
     connect(m_work, &utisDeviceWorker::showMsg, this, &utisDevice::showMsg);
     connect(this, &utisDevice::signalGetLatestData, m_work, &utisDeviceWorker::slotGetLatestData);
     connect(m_work, &utisDeviceWorker::signalDataUpdate, this, &utisDevice::signalDataUpdate);
+    connect(this, &utisDevice::signalCloseDevices, m_work, &utisDeviceWorker::slotCloseDevices);
 }
 
 utisDevice::~utisDevice()

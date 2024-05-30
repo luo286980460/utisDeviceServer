@@ -38,14 +38,15 @@ public slots:
     void slotStart();
     void slotReadyRead();
     void slotGetLatestData(QByteArrayList cmd);
+    void slotCloseDevices();
 
 private:
     QUdpSocket* m_udpClient = nullptr;
-    int m_localPort;            // 本地端口
-    int m_destPort;             // 目的地 Port
-    QString m_destIp;           // 目的地 IP
-    QByteArray m_dataGram;      // udp接收数据暂存
-    QList<AShuErDevice*> m_onlineDev; // 在线设备列表
+    int m_localPort;                    // 本地端口
+    int m_destPort;                     // 目的地 Port
+    QString m_destIp;                   // 目的地 IP
+    QByteArray m_dataGram;              // udp接收数据暂存
+    QList<AShuErDevice*> m_onlineDev;   // 在线设备列表
     QJsonObject m_jsonData;
     QTimer* m_timer;
     QByteArrayList m_cmdList;

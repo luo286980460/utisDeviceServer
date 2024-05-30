@@ -38,29 +38,33 @@ void utisDeviceWorker::initTimer()
 void utisDeviceWorker::initJsonData()
 {
     // 一体化
-    m_jsonData.insert("温度", "/");
-    m_jsonData.insert("湿度", "/");
-    m_jsonData.insert("气压", "/");
-    m_jsonData.insert("风速", "/");
-    m_jsonData.insert("风向", "/");
-    m_jsonData.insert("雨量", "/");
+    m_jsonData.insert("wenDu", "/");                // 温度
+    m_jsonData.insert("shiDu", "/");                // 湿度
+    m_jsonData.insert("qiYa", "/");                 // 气压
+    m_jsonData.insert("fengSu", "/");               // 风速
+    m_jsonData.insert("fengXiang", "/");            // 风向
+    m_jsonData.insert("jiangYuLiang", "/");         // 降雨量
 
     // 路面状况
-    m_jsonData.insert("路面温度", "/");
-    m_jsonData.insert("水膜厚度", "/");
-    m_jsonData.insert("覆冰厚度", "/");
-    m_jsonData.insert("覆雪厚度", "/");
-    m_jsonData.insert("湿滑系数", "/");
-    m_jsonData.insert("路面状态", "/");
-    m_jsonData.insert("空气温度", "/");
-    m_jsonData.insert("相对湿度", "/");
+    m_jsonData.insert("luMianWenDu", "/");          // 路面温度
+    m_jsonData.insert("shuiMoHouDu", "/");          // 水膜厚度
+    m_jsonData.insert("fuBingHouDu", "/");          // 覆冰厚度
+    m_jsonData.insert("fuXueHouDu", "/");           // 覆雪厚度
+    m_jsonData.insert("shiHuaXiShu", "/");          // 湿滑系数
+    m_jsonData.insert("luMianZhuangTai", "/");      // 路面状态
+    m_jsonData.insert("kongQiWenDi", "/");          // 空气温度
+    m_jsonData.insert("xiangDuiShiDu", "/");        // 相对湿度
 
     // 能见度
-    m_jsonData.insert("1分钟能见度", "/");
-    m_jsonData.insert("10分钟能见度", "/");
-    m_jsonData.insert("数据变化趋势", "/");
-    m_jsonData.insert("NWS天气现象", "/");
+    m_jsonData.insert("1MinNengJianDu", "/");       // 1分钟能见度
+    m_jsonData.insert("10MinNengJianDu", "/");      // 10分钟能见度
+    m_jsonData.insert("shuJuBianHuaQuShi", "/");    // 数据变化趋势
+    m_jsonData.insert("tianQiXiangXianCode", "/"); // 天气现象代码
 
+    // 设备状态  0-正常 1-气象站异常 2-路温异常 3-能见度异常
+    m_jsonData.insert("sheBeiZhuangTai", "/");      // 设备状态
+
+    emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
 
 void utisDeviceWorker::getLatestData()
@@ -113,14 +117,16 @@ void utisDeviceWorker::unPackDataTH(QStringList& list)
                 .arg(zhuBanWenDu).arg(kongQiWenDu).arg(xiangDuiShiDu)
                 .arg(luMianWenDu).arg(devState));
 
-    m_jsonData["路面温度"] = luMianWenDu;
-    m_jsonData["水膜厚度"] = "/";
-    m_jsonData["覆冰厚度"] = "/";
-    m_jsonData["覆雪厚度"] = "/";
-    m_jsonData["湿滑系数"] = "/";
-    m_jsonData["路面状态"] = "/";
-    m_jsonData["空气温度"] = kongQiWenDu;
-    m_jsonData["相对湿度"] = xiangDuiShiDu;
+    m_jsonData["luMianWenDu"] = luMianWenDu;
+    m_jsonData["shuiMoHouDu"] = "/";
+    m_jsonData["fuBingHouDu"] = "/";
+    m_jsonData["fuXueHouDu"] = "/";
+    m_jsonData["shiHuaXiShu"] = "/";
+    m_jsonData["luMianZhuangTai"] = "/";
+    m_jsonData["kongQiWenDi"] = kongQiWenDu;
+    m_jsonData["xiangDuiShiDu"] = xiangDuiShiDu;
+
+    m_jsonData.insert("sheBeiZhuangTai", devState == "00" ? "0" : "2");      // 设备状态
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
@@ -146,14 +152,15 @@ void utisDeviceWorker::unPackDataRD(QStringList &list)
                 .arg(jiKeWenDu).arg(gongDianDianYa).arg(devState));
 
 
-    m_jsonData["路面温度"] = luMianWenDu;
-    m_jsonData["水膜厚度"] = shuiHouDu;
-    m_jsonData["覆冰厚度"] = bingHouDu;
-    m_jsonData["覆雪厚度"] = xueHouDu;
-    m_jsonData["湿滑系数"] = shiHuaXiShu;
-    m_jsonData["路面状态"] = biaoMianZhuangTai;
-    m_jsonData["空气温度"] = "/";
-    m_jsonData["相对湿度"] = "/";
+    m_jsonData["luMianWenDu"] = luMianWenDu;
+    m_jsonData["shuiMoHouDu"] = shuiHouDu;
+    m_jsonData["fuBingHouDu"] = bingHouDu;
+    m_jsonData["fuXueHouDu"] = xueHouDu;
+    m_jsonData["shiHuaXiShu"] = shiHuaXiShu;
+    m_jsonData["luMianZhuangTai"] = biaoMianZhuangTai;
+    m_jsonData["kongQiWenDi"] = "/";
+    m_jsonData["xiangDuiShiDu"] = "/";
+    m_jsonData.insert("sheBeiZhuangTai", devState == "00" ? "0" : "2");      // 设备状态
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
@@ -171,10 +178,11 @@ void utisDeviceWorker::unPackDataVD5(QStringList &list)
                 .arg(min1NengJianDu).arg(min10NengJianDu).arg(nengJianDuQuShi)
                 .arg(devState));
 
-    m_jsonData["1分钟能见度"] = min1NengJianDu;
-    m_jsonData["10分钟能见度"] = min10NengJianDu;
-    m_jsonData["数据变化趋势"] = nengJianDuQuShi;
-    m_jsonData["NWS天气现象"] = "/";
+    m_jsonData["1MinNengJianDu"] = min1NengJianDu;
+    m_jsonData["10MinNengJianDu"] = min10NengJianDu;
+    m_jsonData["shuJuBianHuaQuShi"] = nengJianDuQuShi;
+    m_jsonData["tianQiXiangXianCode"] = "/";
+    m_jsonData.insert("sheBeiZhuangTai", devState == "0" ? "0" : "3");      // 设备状态
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
@@ -193,10 +201,11 @@ void utisDeviceWorker::unPackDataVD6(QStringList &list)
                 .arg(min1NengJianDu).arg(min10NengJianDu).arg(tianQiDaiMa)
                 .arg(nengJianDuQuShi).arg(devState));
 
-    m_jsonData["1分钟能见度"] = min1NengJianDu;
-    m_jsonData["10分钟能见度"] = min10NengJianDu;
-    m_jsonData["数据变化趋势"] = nengJianDuQuShi;
-    m_jsonData["NWS天气现象"] = tianQiDaiMa;
+    m_jsonData["1MinNengJianDu"] = min1NengJianDu;
+    m_jsonData["10MinNengJianDu"] = min10NengJianDu;
+    m_jsonData["shuJuBianHuaQuShi"] = nengJianDuQuShi;
+    m_jsonData["tianQiXiangXianCode"] = tianQiDaiMa;
+    m_jsonData.insert("sheBeiZhuangTai", devState == "0" ? "0" : "3");      // 设备状态
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
@@ -256,19 +265,19 @@ void utisDeviceWorker::unPackDataMWS600()
                       .arg(devState).arg(windDirc).arg(windSpeed)
                       .arg(wenDu).arg(shiDu).arg(qiYa)
                      .arg(JinagYuState).arg(JinagYuQiangDu).arg(LeiJiYuLiang));
-    m_jsonData["温度"] = wenDu;
-    m_jsonData["湿度"] = shiDu;
-    m_jsonData["气压"] = qiYa;
-    m_jsonData["风速"] = windSpeed;
-    m_jsonData["风向"] = windDirc;
-    m_jsonData["雨量"] = LeiJiYuLiang;
+    m_jsonData["wenDu"] = QString::number(wenDu, 'f', 2);
+    m_jsonData["shiDu"] = QString::number(shiDu, 'f', 2);
+    m_jsonData["qiYa"] = QString::number(qiYa, 'f', 2);
+    m_jsonData["fengSu"] = windSpeed;
+    m_jsonData["fengXiang"] = windDirc;
+    m_jsonData["jiangYuLiang"] = QString::number(LeiJiYuLiang, 'f', 2);
+    m_jsonData.insert("sheBeiZhuangTai", "0");      // 设备状态
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
 
 void utisDeviceWorker::unPackDataMWS600(QString data)
 {
-    //showMsg("*********************data[" + data);
     data.remove(0,1);
     QByteArray ba;
 
@@ -278,15 +287,11 @@ void utisDeviceWorker::unPackDataMWS600(QString data)
         ba.append(c);
         data.remove(0,2);
     }
-
-    //showMsg("*********************ba[" + ba);
-
 }
 
 float utisDeviceWorker::hex2Float(QString floatHex)
 {
     float data;
-//qDebug() << floatHex;
     TData.TestData_Array [3]= floatHex.left(2).toInt(nullptr, 16); //内存赋值
     floatHex.remove(0, 2);
     TData.TestData_Array [2]= floatHex.left(2).toInt(nullptr, 16); //内存赋值
@@ -296,33 +301,15 @@ float utisDeviceWorker::hex2Float(QString floatHex)
     TData.TestData_Array [0]= floatHex.left(2).toInt(nullptr, 16); //内存赋值
     floatHex.remove(0, 2);
     data = TData.TestData_Float; //得到浮点数
-    //qDebug() << data;
 
     return data;
-
-//    showMsg("*********************floatHex:" + floatHex);
-//    QByteArray hex;
-//    while(!floatHex.isEmpty()){
-//        //hex[0, floatHex.left(2));
-//        qDebug() << ;
-//        floatHex.remove(0, 2);
-//    }
-
-//    qDebug() << ("*********************");
-//    showMsg("*********************hex:" + hex);
-
-//    int iFloat = hex.toInt(nullptr, 16);
-    //showMsg("*********************iFloat:" + QString::number(iFloat));
-
-//    float data = *(float*)&iFloat;
-//    return QString::number(data,'f',2).toFloat();
-//return QString::number(data,'f',2).toFloat();
 }
 
 void utisDeviceWorker::slotStart()
 {
     initUdpClient();
     initTimer();
+    initJsonData();
 }
 
 void utisDeviceWorker::slotReadyRead()
@@ -335,13 +322,16 @@ void utisDeviceWorker::slotReadyRead()
         m_udpClient->readDatagram(dataGram.data(), dataGram.size());
         m_dataGram += dataGram;
     }
-    //emit showMsg(m_dataGram);
     unPackData();
 }
 
 void utisDeviceWorker::slotGetLatestData(QByteArrayList cmd)
 {
-    //m_cmdList << cmd;
     m_cmdList = cmd;
     getLatestData();
+}
+
+void utisDeviceWorker::slotCloseDevices()
+{
+    initJsonData();
 }

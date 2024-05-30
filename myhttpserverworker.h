@@ -16,6 +16,7 @@ class MyHttpServerWorker : public QObject
     Q_OBJECT
 public:
     explicit MyHttpServerWorker(QObject *parent = nullptr);
+    ~MyHttpServerWorker();
 
 private:
 

@@ -22,6 +22,7 @@ signals:
     void signalGetLatestData(QByteArrayList cmd);
     void signalAddDevResult(QString devType, bool success);
     void signalDataUpdate(QByteArray jsonData);
+    void signalCloseDevices();
 
 private:
     QThread m_workerThread;

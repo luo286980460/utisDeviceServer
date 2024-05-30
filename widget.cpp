@@ -130,7 +130,6 @@ void Widget::initTimer()
 {
     m_timer.setInterval(m_getdataInterval);
     connect(&m_timer, &QTimer::timeout, this, [=](){
-        //emit m_aShuErDevice->signalGetLatestData();
         if(m_isOpen && m_udpDevice)
             emit m_udpDevice->signalGetLatestData(m_cmd);
     });
@@ -200,11 +199,12 @@ void Widget::on_NengJianDuDevModelCBox_currentIndexChanged(int index)
 void Widget::on_startBtn_clicked()
 {
     if(m_isOpen){
-        //ui->startBtn->setText("start");
         ui->startBtn->setStyleSheet("border-image: url(:/resources/icons/offline.png);");
         ui->QiXiangZhanGBox->setEnabled(true);
         ui->LuWenGBox->setEnabled(true);
         ui->NengJianDuGBox->setEnabled(true);
+        //m_timer.stop();
+
     }else{
         ui->startBtn->setStyleSheet("border-image: url(:/resources/icons/online.png);");
         ui->QiXiangZhanGBox->setEnabled(false);
@@ -214,8 +214,18 @@ void Widget::on_startBtn_clicked()
         m_cmd << ui->QiXiangZhanCmdCBox->currentText().append("\r\n").toLatin1()
               << ui->LuWenCmdCBox->currentText().append("\r\n").toLatin1()
               << ui->NengJianDuCmdCBox->currentText().append("\r\n").toLatin1();
+        //m_getdataInterval = ui->spinBox->value();
+//        if(m_timer.isActive()){
+//            m_timer.stop();
+//            m_timer.setInterval(m_getdataInterval);
+//            m_timer.start();
+//        }
+        //m_timer.setInterval(m_getdataInterval);
+
     }
     m_isOpen = !m_isOpen;
+    if(m_udpDevice)
+        emit m_udpDevice->signalCloseDevices();
 }
 
 
