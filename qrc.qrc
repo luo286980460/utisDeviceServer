@@ -4,5 +4,6 @@
         <file>resources/icons/online.png</file>
         <file>resources/icons/reconnect.png</file>
         <file>resources/icons/equipInfo.png</file>
+        <file>resources/icons/icon.png</file>
     </qresource>
 </RCC>

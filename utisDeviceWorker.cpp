@@ -2,12 +2,13 @@
 
 #include <QThread>
 #include <QJsonDocument>
+#include <QDateTime>
 
-utisDeviceWorker::utisDeviceWorker(QObject *parent)
+utisDeviceWorker::utisDeviceWorker(QString destIp, int destPort, int localPort, QObject *parent)
     : QObject{parent}
-    , m_localPort(8899)
-    , m_destPort(8899)
-    , m_destIp("192.168.1.185")
+    , m_destIp(destIp)
+    , m_destPort(destPort)
+    , m_localPort(localPort)
 {
 
 }
@@ -63,6 +64,7 @@ void utisDeviceWorker::initJsonData()
 
     // 设备状态  0-正常 1-气象站异常 2-路温异常 3-能见度异常
     m_jsonData.insert("sheBeiZhuangTai", "/");      // 设备状态
+    m_jsonData.insert("datetime", "/");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
@@ -126,7 +128,8 @@ void utisDeviceWorker::unPackDataTH(QStringList& list)
     m_jsonData["kongQiWenDi"] = kongQiWenDu;
     m_jsonData["xiangDuiShiDu"] = xiangDuiShiDu;
 
-    m_jsonData.insert("sheBeiZhuangTai", devState == "00" ? "0" : "2");      // 设备状态
+    m_jsonData["sheBeiZhuangTai"] = devState == "00" ? "0" : "2";      // 设备状态
+    m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
@@ -160,8 +163,8 @@ void utisDeviceWorker::unPackDataRD(QStringList &list)
     m_jsonData["luMianZhuangTai"] = biaoMianZhuangTai;
     m_jsonData["kongQiWenDi"] = "/";
     m_jsonData["xiangDuiShiDu"] = "/";
-    m_jsonData.insert("sheBeiZhuangTai", devState == "00" ? "0" : "2");      // 设备状态
-
+    m_jsonData["sheBeiZhuangTai"] = devState == "00" ? "0" : "2";      // 设备状态
+    m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
 
@@ -182,7 +185,8 @@ void utisDeviceWorker::unPackDataVD5(QStringList &list)
     m_jsonData["10MinNengJianDu"] = min10NengJianDu;
     m_jsonData["shuJuBianHuaQuShi"] = nengJianDuQuShi;
     m_jsonData["tianQiXiangXianCode"] = "/";
-    m_jsonData.insert("sheBeiZhuangTai", devState == "0" ? "0" : "3");      // 设备状态
+    m_jsonData["sheBeiZhuangTai"] = devState == "0" ? "0" : "3";      // 设备状态
+    m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
@@ -205,7 +209,8 @@ void utisDeviceWorker::unPackDataVD6(QStringList &list)
     m_jsonData["10MinNengJianDu"] = min10NengJianDu;
     m_jsonData["shuJuBianHuaQuShi"] = nengJianDuQuShi;
     m_jsonData["tianQiXiangXianCode"] = tianQiDaiMa;
-    m_jsonData.insert("sheBeiZhuangTai", devState == "0" ? "0" : "3");      // 设备状态
+    m_jsonData["sheBeiZhuangTai"] = devState == "0" ? "0" : "3";      // 设备状态
+    m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
@@ -271,7 +276,8 @@ void utisDeviceWorker::unPackDataMWS600()
     m_jsonData["fengSu"] = windSpeed;
     m_jsonData["fengXiang"] = windDirc;
     m_jsonData["jiangYuLiang"] = QString::number(LeiJiYuLiang, 'f', 2);
-    m_jsonData.insert("sheBeiZhuangTai", "0");      // 设备状态
+    m_jsonData["sheBeiZhuangTai"] = "0";      // 设备状态
+    m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }

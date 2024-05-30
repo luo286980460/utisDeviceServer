@@ -10,8 +10,9 @@
 
 #define TEST_HTTPS 0
 
-MyHttpServerWorker::MyHttpServerWorker(QObject *parent)
+MyHttpServerWorker::MyHttpServerWorker(int port, QObject *parent)
     : QObject{parent}
+    , m_port(port)
 {
 
 }

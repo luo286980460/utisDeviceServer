@@ -1,10 +1,10 @@
 #include "utisDevice.h"
 #include "utisDeviceWorker.h"
 
-utisDevice::utisDevice(QObject *parent)
+utisDevice::utisDevice(QString destIp, int destPort, int localPort, QObject *parent)
     : QObject{parent}
 {
-    m_work = new utisDeviceWorker;
+    m_work = new utisDeviceWorker(destIp, destPort, localPort);
 
     m_work->moveToThread(&m_workerThread);
     connect(&m_workerThread, &QThread::finished, m_work, &QObject::deleteLater);

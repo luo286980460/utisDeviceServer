@@ -1,5 +1,6 @@
 #include <QSettings>
 #include <QFileInfo>
+#include <QMenu>
 
 #include "widget.h"
 #include "ui_widget.h"
@@ -14,7 +15,7 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    setWindowTitle("UTISWeatherDevices");
+    setWindowTitle("UTISWeatherDevices_2024_05_30");
     setFixedSize(size());
 
     init();
@@ -27,11 +28,12 @@ Widget::~Widget()
 
 void Widget::init()
 {
+    initSystemTray();
     initCfg();
     initUi();
     initTimer();
-    initDeviceUdp();
     initHttpServer();
+    initDeviceUdp();
 
     connect(m_udpDevice, &utisDevice::signalDataUpdate, m_httpServer, &MyHttpServer::signalDataUpdate);
 }
@@ -49,6 +51,34 @@ void Widget::initCfg()
     }
     QSettings settings(iniPath, QSettings::IniFormat);
     settings.setIniCodec("UTF-8");
+
+    // 获取基础信息
+    {
+        m_DestIp = settings.value(QString("Base/DestIp"), "-1").toString();               // 串口服务器 ip
+        m_DestPort = settings.value(QString("Base/DestPort"), -1).toInt();;               // 串口服务器 端口
+        m_LocalPort = settings.value(QString("Base/LocalPort"), -1).toInt();;             // 本地串口 udp 接收端口
+        m_ServerPort = settings.value(QString("Base/ServerPort"), -1).toInt();;           // 本地气象服务接口 端口
+        m_PollingInterval = 1000 * settings.value(QString("Base/PollingInterval"), -1).toInt();  // 多设备轮询间隔
+        m_UpdateInterval = 1000 * settings.value(QString("Base/UpdateInterval"), -1).toInt();    // 获取最新数据间隔
+
+        emit showMsg(QString("DestIp[%1]\tDestPort[%2]\tServerPort[%3]\n\
+PollingInterval[%4]\tPollingInterval[%5]\tUpdateInterval[%6]")
+                            .arg(m_DestIp).arg(m_DestPort).arg(m_LocalPort)
+                            .arg(m_ServerPort).arg(m_PollingInterval).arg(m_UpdateInterval));
+
+        if(m_DestIp == "-1")  showMsg("******Base/DestIp 数据有误");
+            m_DestIp = "192.168.1.185";
+        if(m_DestPort == -1)  showMsg("******Base/DestPort 数据有误");
+            m_DestPort = 8899;
+        if(m_LocalPort == -1)  showMsg("******Base/ServerPort 数据有误");
+            m_LocalPort = 8899;
+        if(m_ServerPort == -1)  showMsg("******Base/ServerPort 数据有误");
+            m_ServerPort = 8889;
+        if(m_PollingInterval == -1)  showMsg("******Base/PollingInterval 数据有误");
+            m_PollingInterval = 1;
+        if(m_UpdateInterval == -1)  showMsg("******Base/UpdateInterval 数据有误");
+            m_UpdateInterval = 30 * 1000;
+    }
 
     // 获取气象站设备
     int DevCount = settings.value(QString("QiXiangZhan/DevCount"), -1).toInt();
@@ -98,6 +128,7 @@ void Widget::addDev(QString brand, QString devModel, QString devCategory, QStrin
 
 void Widget::initUi()
 {
+    setWindowIcon(QIcon(":/resources/icons/icon.png"));
     foreach (s_devInfo* info, m_DevList) {
         if(info->DevCategory == QI_XIANZG_ZHAN){
             ui->QiXiangZhanBrandCBox->addItem(info->Brand);
@@ -122,13 +153,13 @@ void Widget::initUi()
 
 void Widget::initHttpServer()
 {
-    m_httpServer = new MyHttpServer();
+    m_httpServer = new MyHttpServer(m_ServerPort);
     m_httpServer->start();
 }
 
 void Widget::initTimer()
 {
-    m_timer.setInterval(m_getdataInterval);
+    m_timer.setInterval(m_UpdateInterval);
     connect(&m_timer, &QTimer::timeout, this, [=](){
         if(m_isOpen && m_udpDevice)
             emit m_udpDevice->signalGetLatestData(m_cmd);
@@ -138,9 +169,54 @@ void Widget::initTimer()
 
 void Widget::initDeviceUdp()
 {
-    m_udpDevice  = new utisDevice(this);
+    m_udpDevice  = new utisDevice(m_DestIp, m_DestPort, m_LocalPort, this);
     connect(m_udpDevice, &utisDevice::showMsg, this, &Widget::showMsg);
     m_udpDevice->start();
+}
+
+void Widget::initSystemTray()
+{
+    //托盘初始化
+        QIcon icon = QIcon(":/resources/icons/icon.png");
+        trayIcon = new QSystemTrayIcon(this);
+        trayIcon->setIcon(icon);
+        trayIcon->setToolTip("江苏尤特智能科技有限公司");
+        trayIcon->show(); //必须调用，否则托盘图标不显示
+
+        //创建菜单项动作(以下动作只对windows有效)
+        minimizeAction = new QAction("最小化~", this);
+        connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide())); //绑定信号槽
+
+        maximizeAction = new QAction("最大化~", this);
+        connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
+
+        restoreAction = new QAction("还原~", this);
+        connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+
+        quitAction = new QAction("退出~", this);
+        connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit())); //关闭应用，qApp对应的是程序全局唯一指针
+
+        //创建托盘菜单(必须先创建动作，后添加菜单项，还可以加入菜单项图标美化)
+        trayIconMenu = new QMenu(this);
+        trayIconMenu->addAction(minimizeAction);
+        trayIconMenu->addAction(maximizeAction);
+        trayIconMenu->addAction(restoreAction);
+        trayIconMenu->addSeparator();
+        trayIconMenu->addAction(quitAction);
+        trayIcon->setContextMenu(trayIconMenu);
+
+
+        connect(trayIcon,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+                this,SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+}
+
+void Widget::closeEvent(QCloseEvent *event)
+{
+    if(trayIcon->isVisible())
+    {
+        hide(); //隐藏窗口
+        event->ignore(); //忽略事件
+    }
 }
 
 
@@ -152,6 +228,25 @@ void Widget::on_clearBtn_clicked()
 void Widget::showMsg(QString msg)
 {
     ui->history->appendPlainText(msg);
+}
+
+void Widget::iconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason)
+    {
+    case QSystemTrayIcon::Trigger:
+        //trayIcon->showMessage("title","你单击了"); //后面两个默认参数
+        show();
+        break;
+    case QSystemTrayIcon::DoubleClick:
+        show();
+        break;
+    case QSystemTrayIcon::MiddleClick:
+        trayIcon->showMessage("title","你中键了");
+        break;
+    default:
+        break;
+    }
 }
 
 void Widget::on_QiXiangZhanBrandCBox_currentIndexChanged(int index)
@@ -221,6 +316,10 @@ void Widget::on_startBtn_clicked()
 //            m_timer.start();
 //        }
         //m_timer.setInterval(m_getdataInterval);
+
+
+        if(m_udpDevice)
+            emit m_udpDevice->signalGetLatestData(m_cmd);
 
     }
     m_isOpen = !m_isOpen;

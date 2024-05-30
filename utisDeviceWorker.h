@@ -13,7 +13,7 @@ class utisDeviceWorker : public QObject
     Q_OBJECT
 
 public:
-    explicit utisDeviceWorker(QObject *parent = nullptr);
+    explicit utisDeviceWorker(QString destIp, int destPort, int localPort, QObject *parent = nullptr);
 
 private:
     void initUdpClient();
@@ -42,9 +42,9 @@ public slots:
 
 private:
     QUdpSocket* m_udpClient = nullptr;
-    int m_localPort;                    // 本地端口
-    int m_destPort;                     // 目的地 Port
     QString m_destIp;                   // 目的地 IP
+    int m_destPort;                     // 目的地 Port
+    int m_localPort;                    // 本地端口
     QByteArray m_dataGram;              // udp接收数据暂存
     QList<AShuErDevice*> m_onlineDev;   // 在线设备列表
     QJsonObject m_jsonData;
