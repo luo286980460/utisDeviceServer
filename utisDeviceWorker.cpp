@@ -64,7 +64,7 @@ void utisDeviceWorker::initJsonData()
     m_jsonData.insert("1MinNengJianDu", "/");       // 1分钟能见度
     m_jsonData.insert("10MinNengJianDu", "/");      // 10分钟能见度
     m_jsonData.insert("shuJuBianHuaQuShi", "/");    // 数据变化趋势
-    m_jsonData.insert("tianQiXiangXianCode", "/"); // 天气现象代码
+    m_jsonData.insert("tianQiXiangXianCode", "/");  // 天气现象代码
 
     // 设备状态  0-正常 1-气象站异常 2-路温异常 3-能见度异常
     m_jsonData.insert("sheBeiZhuangTai", "/");      // 设备状态
@@ -259,8 +259,8 @@ void utisDeviceWorker::unPackDataSKY3(QStringList &list)
     m_jsonData["fengSu"] =list.at(9).toFloat();
     m_jsonData["fengXiang"] = list.at(10).toInt();
     m_jsonData["jiangYuLiang"] = list.at(12).toFloat();
-    m_jsonData["sheBeiZhuangTai"] = "0";      // 设备状态
-    m_jsonData["yuGanZhuangTai"] = list.at(13).toInt();;       // 雨感状态
+    m_jsonData["sheBeiZhuangTai"] = "0";                        // 设备状态
+    m_jsonData["yuGanZhuangTai"] = list.at(13).toInt();;        // 雨感状态
     m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
@@ -334,19 +334,6 @@ void utisDeviceWorker::unPackDataMWS600()
     m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
-}
-
-void utisDeviceWorker::unPackDataMWS600(QString data)
-{
-    data.remove(0,1);
-    QByteArray ba;
-
-    while(!data.isEmpty()){
-        char c = (char)data.left(2).toInt(nullptr, 16);
-        qDebug() << data.left(2).toInt(nullptr, 16);
-        ba.append(c);
-        data.remove(0,2);
-    }
 }
 
 float utisDeviceWorker::hex2Float(QString floatHex)

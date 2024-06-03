@@ -28,7 +28,6 @@ private:
     void unPackDataHY3000(QStringList& list);   // HY3000
     void unPackDataSKY3(QStringList& list);     // SKY3
     void unPackDataMWS600();
-    void unPackDataMWS600(QString data);
     float hex2Float(QString floatHex);
 
 signals:
