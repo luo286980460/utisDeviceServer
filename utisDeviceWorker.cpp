@@ -232,8 +232,8 @@ void utisDeviceWorker::unPackDataVD6(QStringList &list)
 
 void utisDeviceWorker::unPackDataHY3000(QStringList &list)
 {
-    emit showMsg(QString("list长度：%1").arg(list.size()));
-    m_jsonData["luMianWenDu"] = list.at(7).toFloat() / 10;
+    //emit showMsg(QString("list长度：%1").arg(list.size()));
+    m_jsonData["luMianWenDu"] = list.at(7).toInt() / 10.0;
     m_jsonData["shuiMoHouDu"] = "/";
     m_jsonData["fuBingHouDu"] = "/";
     m_jsonData["fuXueHouDu"] = "/";
@@ -305,7 +305,7 @@ void utisDeviceWorker::unPackDataMWS600()
     dataGram.remove(0, 4);
 
     // 降雨状态
-    char JinagYuState = dataGram.left(2).toInt(nullptr, 16);
+    int JinagYuState = dataGram.left(2).toInt(nullptr, 16);
     dataGram.remove(0, 2);
 
     // 降雨强度
@@ -329,8 +329,8 @@ void utisDeviceWorker::unPackDataMWS600()
     m_jsonData["fengSu"] = windSpeed;
     m_jsonData["fengXiang"] = windDirc;
     m_jsonData["jiangYuLiang"] = QString::number(LeiJiYuLiang, 'f', 2);
-    m_jsonData["sheBeiZhuangTai"] = "0";      // 设备状态
-    m_jsonData["yuGanZhuangTai"] = "/";       // 雨感状态
+    m_jsonData["sheBeiZhuangTai"] = "0";            // 设备状态
+    m_jsonData["yuGanZhuangTai"] = JinagYuState;    // 雨感状态
     m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());

@@ -15,7 +15,7 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    setWindowTitle("UTISWeatherDevices_2024_05_30");
+    setWindowTitle("UTISWeatherDevices_2024_06_03");
     setFixedSize(size());
 
     init();
