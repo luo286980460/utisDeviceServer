@@ -17,9 +17,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>229</y>
+     <y>389</y>
      <width>780</width>
-     <height>321</height>
+     <height>161</height>
     </rect>
    </property>
   </widget>
@@ -58,23 +58,16 @@
      <x>10</x>
      <y>10</y>
      <width>221</width>
-     <height>191</height>
+     <height>271</height>
     </rect>
    </property>
    <property name="title">
     <string>气象站</string>
    </property>
    <widget class="QComboBox" name="QiXiangZhanBrandCBox">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>30</y>
-      <width>161</width>
-      <height>30</height>
-     </rect>
+    <property name="enabled">
+     <bool>false</bool>
     </property>
-   </widget>
-   <widget class="QComboBox" name="QiXiangZhanDevModelCBox">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -83,12 +76,32 @@
       <height>30</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="QiXiangZhanDevModelCBox">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>110</y>
+      <width>161</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>70</y>
       <width>40</width>
       <height>30</height>
      </rect>
@@ -97,46 +110,17 @@
      <string>品牌：</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>40</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>种类：</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>70</y>
+      <y>110</y>
       <width>40</width>
       <height>30</height>
      </rect>
     </property>
     <property name="text">
      <string>型号：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="QiXiangZhanLabel">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>110</y>
-      <width>161</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="text">
-     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
@@ -164,84 +148,79 @@
       <height>30</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
    </widget>
-  </widget>
-  <widget class="QGroupBox" name="LuWenGBox">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>10</y>
-     <width>221</width>
-     <height>191</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>路温</string>
-   </property>
-   <widget class="QComboBox" name="LuWenBrandCBox">
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>190</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>地址：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>230</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>端口：</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="QiXiangZhanIpCBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>30</y>
+      <y>190</y>
       <width>161</width>
       <height>30</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
    </widget>
-   <widget class="QComboBox" name="LuWenDevModelCBox">
+   <widget class="QComboBox" name="QiXiangZhanPortCBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>70</y>
+      <y>230</y>
       <width>161</width>
       <height>30</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
    </widget>
-   <widget class="QLabel" name="label_8">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>40</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>品牌：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_9">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>40</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>种类：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_10">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>40</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>型号：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="LuWenLabel">
+   <widget class="QLabel" name="QiXiangZhanLabel">
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>110</y>
+      <y>30</y>
       <width>161</width>
       <height>30</height>
      </rect>
@@ -251,6 +230,91 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>种类：</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="LuWenGBox">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>10</y>
+     <width>221</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>路温</string>
+   </property>
+   <widget class="QComboBox" name="LuWenBrandCBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>70</y>
+      <width>161</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="LuWenDevModelCBox">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>110</y>
+      <width>161</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>品牌：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>型号：</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
@@ -278,84 +342,79 @@
       <height>30</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
    </widget>
-  </widget>
-  <widget class="QGroupBox" name="NengJianDuGBox">
-   <property name="geometry">
-    <rect>
-     <x>490</x>
-     <y>10</y>
-     <width>221</width>
-     <height>191</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>能见度</string>
-   </property>
-   <widget class="QComboBox" name="NengJianDuBrandCBox">
+   <widget class="QLabel" name="label_12">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>190</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>地址：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>230</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>端口：</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="LuWenIpCBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>30</y>
+      <y>190</y>
       <width>161</width>
       <height>30</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
    </widget>
-   <widget class="QComboBox" name="NengJianDuDevModelCBox">
+   <widget class="QComboBox" name="LuWenPortCBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>70</y>
+      <y>230</y>
       <width>161</width>
       <height>30</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
    </widget>
-   <widget class="QLabel" name="label_16">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>40</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>品牌：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_17">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>40</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>种类：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_18">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>40</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>型号：</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="NengJianDuLabel">
+   <widget class="QLabel" name="LuWenLabel">
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>110</y>
+      <y>30</y>
       <width>161</width>
       <height>30</height>
      </rect>
@@ -365,6 +424,91 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>种类：</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="NengJianDuGBox">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>10</y>
+     <width>221</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>能见度</string>
+   </property>
+   <widget class="QComboBox" name="NengJianDuBrandCBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>70</y>
+      <width>161</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="NengJianDuDevModelCBox">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>110</y>
+      <width>161</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_16">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>品牌：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_18">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>型号：</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
@@ -391,6 +535,102 @@
       <width>161</width>
       <height>30</height>
      </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_14">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>190</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>地址：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_15">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>230</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>端口：</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="NengJianDuIpCBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>190</y>
+      <width>161</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="NengJianDuPortCBox">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>230</y>
+      <width>161</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_17">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>40</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>种类：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="NengJianDuLabel">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>30</y>
+      <width>161</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

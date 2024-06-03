@@ -10,7 +10,7 @@ class utisDevice : public QObject
 {
     Q_OBJECT
 public:
-    explicit utisDevice(QString destIp, int destPort, int localPort, QObject *parent = nullptr);
+    explicit utisDevice(int localPort, QObject *parent = nullptr);
     ~utisDevice();
 
     void start();

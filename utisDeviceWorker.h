@@ -13,7 +13,7 @@ class utisDeviceWorker : public QObject
     Q_OBJECT
 
 public:
-    explicit utisDeviceWorker(QString destIp, int destPort, int localPort, QObject *parent = nullptr);
+    explicit utisDeviceWorker(int localPort, QObject *parent = nullptr);
 
 private:
     void initUdpClient();
@@ -21,10 +21,12 @@ private:
     void initJsonData();
     void getLatestData();
     void unPackData();
-    void unPackDataTH(QStringList& list);   // RD3000C
-    void unPackDataRD(QStringList& list);   // RD3000B
-    void unPackDataVD5(QStringList& list);   // VD920G
-    void unPackDataVD6(QStringList& list);   // D930A
+    void unPackDataTH(QStringList& list);       // RD3000C
+    void unPackDataRD(QStringList& list);       // RD3000B
+    void unPackDataVD5(QStringList& list);      // VD920G
+    void unPackDataVD6(QStringList& list);      // D930A
+    void unPackDataHY3000(QStringList& list);   // HY3000
+    void unPackDataSKY3(QStringList& list);     // SKY3
     void unPackDataMWS600();
     void unPackDataMWS600(QString data);
     float hex2Float(QString floatHex);
@@ -42,8 +44,6 @@ public slots:
 
 private:
     QUdpSocket* m_udpClient = nullptr;
-    QString m_destIp;                   // 目的地 IP
-    int m_destPort;                     // 目的地 Port
     int m_localPort;                    // 本地端口
     QByteArray m_dataGram;              // udp接收数据暂存
     QList<AShuErDevice*> m_onlineDev;   // 在线设备列表

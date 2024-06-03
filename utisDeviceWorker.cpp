@@ -4,10 +4,8 @@
 #include <QJsonDocument>
 #include <QDateTime>
 
-utisDeviceWorker::utisDeviceWorker(QString destIp, int destPort, int localPort, QObject *parent)
+utisDeviceWorker::utisDeviceWorker(int localPort, QObject *parent)
     : QObject{parent}
-    , m_destIp(destIp)
-    , m_destPort(destPort)
     , m_localPort(localPort)
 {
 
@@ -25,8 +23,13 @@ void utisDeviceWorker::initTimer()
     m_timer = new QTimer(this);
     connect(m_timer, &QTimer::timeout, this, [=]{
         if(m_udpClient && !m_cmdList.isEmpty()){
-            m_udpClient->writeDatagram(m_cmdList.first(), QHostAddress(m_destIp), m_destPort);
-            //emit showMsg(QString("发送命令[%1][%2][%3]").arg(QString(m_cmdList.first())).arg(m_destIp).arg(m_destPort));
+            QByteArrayList bList = m_cmdList.first().split('_');
+            if(bList.size() != 3) return;
+            QHostAddress ip(QString(bList.at(0)));
+            int port = bList.at(1).toInt();
+            QByteArray cmd = bList.at(2);
+            m_udpClient->writeDatagram(cmd, ip, port);
+            emit showMsg(QString("发送命令[%1][%2][%3]").arg(QString(cmd)).arg(ip.toString()).arg(port));
             m_cmdList.removeFirst();
         }else{
             m_timer->stop();
@@ -45,6 +48,7 @@ void utisDeviceWorker::initJsonData()
     m_jsonData.insert("fengSu", "/");               // 风速
     m_jsonData.insert("fengXiang", "/");            // 风向
     m_jsonData.insert("jiangYuLiang", "/");         // 降雨量
+    m_jsonData.insert("yuGanZhuangTai", "/");       // 雨感状态 0-无雨 1-有雨
 
     // 路面状况
     m_jsonData.insert("luMianWenDu", "/");          // 路面温度
@@ -96,12 +100,23 @@ void utisDeviceWorker::unPackData()
         unPackDataRD(dataList);
 
     }
+
     // VD920G 协议 VD 开头
     else if(dataList.at(0) == "VD"){
         if(dataList.size() == 5)
             unPackDataVD5(dataList);
         else if(dataList.size() == 6)
             unPackDataVD6(dataList);
+    }
+
+    // HY3000 有15个数据
+    else if(dataList.size() == 15){
+        unPackDataHY3000(dataList);
+    }
+
+    // SKY3 有15个数据
+    else if(dataList.at(0) == "SK" && dataList.size() == 7){
+        unPackDataSKY3(dataList);
     }
 }
 
@@ -215,9 +230,46 @@ void utisDeviceWorker::unPackDataVD6(QStringList &list)
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
 
+void utisDeviceWorker::unPackDataHY3000(QStringList &list)
+{
+    emit showMsg(QString("list长度：%1").arg(list.size()));
+    m_jsonData["luMianWenDu"] = list.at(7).toFloat() / 10;
+    m_jsonData["shuiMoHouDu"] = "/";
+    m_jsonData["fuBingHouDu"] = "/";
+    m_jsonData["fuXueHouDu"] = "/";
+    m_jsonData["shiHuaXiShu"] = "/";
+    m_jsonData["luMianZhuangTai"] = "/";
+    m_jsonData["kongQiWenDi"] = "/";
+    m_jsonData["xiangDuiShiDu"] = "/";
+    m_jsonData["1MinNengJianDu"] = list.at(1);
+    m_jsonData["10MinNengJianDu"] = list.at(4);
+    m_jsonData["shuJuBianHuaQuShi"] = "/";
+    m_jsonData["tianQiXiangXianCode"] = "/";
+    m_jsonData["sheBeiZhuangTai"] = "0";      // 设备状态
+    m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
+
+    emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
+}
+
+void utisDeviceWorker::unPackDataSKY3(QStringList &list)
+{
+    m_jsonData["wenDu"] = list.at(6).toFloat();
+    m_jsonData["shiDu"] = list.at(7).toFloat();
+    m_jsonData["qiYa"] = list.at(8).toFloat();
+    m_jsonData["fengSu"] =list.at(9).toFloat();
+    m_jsonData["fengXiang"] = list.at(10).toInt();
+    m_jsonData["jiangYuLiang"] = list.at(12).toFloat();
+    m_jsonData["sheBeiZhuangTai"] = "0";      // 设备状态
+    m_jsonData["yuGanZhuangTai"] = list.at(13).toInt();;       // 雨感状态
+    m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
+
+    emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
+}
+
 void utisDeviceWorker::unPackDataMWS600()
 {
     QByteArray dataGram = m_dataGram;
+
     dataGram.remove(0, 1);
     dataGram.remove(0, 6);
 
@@ -246,6 +298,7 @@ void utisDeviceWorker::unPackDataMWS600()
 
     // 气压
     float qiYa = hex2Float(QString(dataGram.left(8)));
+    qDebug() << qiYa;
     dataGram.remove(0, 8);
 
     // 预留2字节
@@ -277,6 +330,7 @@ void utisDeviceWorker::unPackDataMWS600()
     m_jsonData["fengXiang"] = windDirc;
     m_jsonData["jiangYuLiang"] = QString::number(LeiJiYuLiang, 'f', 2);
     m_jsonData["sheBeiZhuangTai"] = "0";      // 设备状态
+    m_jsonData["yuGanZhuangTai"] = "/";       // 雨感状态
     m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
@@ -298,6 +352,7 @@ void utisDeviceWorker::unPackDataMWS600(QString data)
 float utisDeviceWorker::hex2Float(QString floatHex)
 {
     float data;
+
     TData.TestData_Array [3]= floatHex.left(2).toInt(nullptr, 16); //内存赋值
     floatHex.remove(0, 2);
     TData.TestData_Array [2]= floatHex.left(2).toInt(nullptr, 16); //内存赋值
