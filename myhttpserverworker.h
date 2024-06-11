@@ -28,7 +28,7 @@ public slots:
 
 private:
     int m_port;
-    QByteArray m_weatherData;       // 气象数据
+    QByteArray m_weatherData;           // 气象数据
 
     HttpService router;
     HttpServer server;

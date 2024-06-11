@@ -42,32 +42,32 @@ void utisDeviceWorker::initTimer()
 void utisDeviceWorker::initJsonData()
 {
     // 一体化
-    m_jsonData.insert("wenDu", "/");                // 温度
-    m_jsonData.insert("shiDu", "/");                // 湿度
-    m_jsonData.insert("qiYa", "/");                 // 气压
-    m_jsonData.insert("fengSu", "/");               // 风速
-    m_jsonData.insert("fengXiang", "/");            // 风向
-    m_jsonData.insert("jiangYuLiang", "/");         // 降雨量
-    m_jsonData.insert("yuGanZhuangTai", "/");       // 雨感状态 0-无雨 1-有雨
+    m_jsonData.insert("temperature", "/");          // 温度
+    m_jsonData.insert("humidness", "/");            // 湿度
+    m_jsonData.insert("airPressure", "/");          // 气压
+    m_jsonData.insert("windSpeed", "/");            // 风速
+    m_jsonData.insert("windDirection", "/");        // 风向
+    m_jsonData.insert("precipitation", "/");        // 降雨量
+    m_jsonData.insert("rainingState", "/");         // 雨感状态 0-无雨 1-有雨
 
     // 路面状况
-    m_jsonData.insert("luMianWenDu", "/");          // 路面温度
-    m_jsonData.insert("shuiMoHouDu", "/");          // 水膜厚度
-    m_jsonData.insert("fuBingHouDu", "/");          // 覆冰厚度
-    m_jsonData.insert("fuXueHouDu", "/");           // 覆雪厚度
-    m_jsonData.insert("shiHuaXiShu", "/");          // 湿滑系数
-    m_jsonData.insert("luMianZhuangTai", "/");      // 路面状态
-    m_jsonData.insert("kongQiWenDi", "/");          // 空气温度
-    m_jsonData.insert("xiangDuiShiDu", "/");        // 相对湿度
+    m_jsonData.insert("roadTemperature", "/");      // 路面温度
+    m_jsonData.insert("waterThickness", "/");       // 水膜厚度
+    m_jsonData.insert("iceThickness", "/");         // 覆冰厚度
+    m_jsonData.insert("snowThickness", "/");        // 覆雪厚度
+    m_jsonData.insert("slipperyCoefficient", "/");  // 湿滑系数
+    m_jsonData.insert("roadState", "/");            // 路面状态
+    m_jsonData.insert("airTemperature", "/");       // 空气温度
+    m_jsonData.insert("relativeHumidity", "/");     // 相对湿度
 
     // 能见度
-    m_jsonData.insert("1MinNengJianDu", "/");       // 1分钟能见度
-    m_jsonData.insert("10MinNengJianDu", "/");      // 10分钟能见度
-    m_jsonData.insert("shuJuBianHuaQuShi", "/");    // 数据变化趋势
-    m_jsonData.insert("tianQiXiangXianCode", "/");  // 天气现象代码
+    m_jsonData.insert("visibility1Min", "/");       // 1分钟能见度
+    m_jsonData.insert("visibility10Min", "/");      // 10分钟能见度
+    m_jsonData.insert("dataVariationTrend", "/");   // 数据变化趋势
+    m_jsonData.insert("weatherCode", "/");          // 天气现象代码
 
     // 设备状态  0-正常 1-气象站异常 2-路温异常 3-能见度异常
-    m_jsonData.insert("sheBeiZhuangTai", "/");      // 设备状态
+    m_jsonData.insert("deviceState", "/");          // 设备状态
     m_jsonData.insert("datetime", "/");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
@@ -134,16 +134,16 @@ void utisDeviceWorker::unPackDataTH(QStringList& list)
                 .arg(zhuBanWenDu).arg(kongQiWenDu).arg(xiangDuiShiDu)
                 .arg(luMianWenDu).arg(devState));
 
-    m_jsonData["luMianWenDu"] = luMianWenDu;
-    m_jsonData["shuiMoHouDu"] = "/";
-    m_jsonData["fuBingHouDu"] = "/";
-    m_jsonData["fuXueHouDu"] = "/";
-    m_jsonData["shiHuaXiShu"] = "/";
-    m_jsonData["luMianZhuangTai"] = "/";
-    m_jsonData["kongQiWenDi"] = kongQiWenDu;
-    m_jsonData["xiangDuiShiDu"] = xiangDuiShiDu;
+    m_jsonData["roadTemperature"] = luMianWenDu;
+    m_jsonData["waterThickness"] = "/";
+    m_jsonData["iceThickness"] = "/";
+    m_jsonData["snowThickness"] = "/";
+    m_jsonData["slipperyCoefficient"] = "/";
+    m_jsonData["roadState"] = "/";
+    m_jsonData["airTemperature"] = kongQiWenDu;
+    m_jsonData["relativeHumidity"] = xiangDuiShiDu;
 
-    m_jsonData["sheBeiZhuangTai"] = devState == "00" ? "0" : "2";      // 设备状态
+    m_jsonData["deviceState"] = devState == "00" ? "0" : "2";      // 设备状态
     m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
@@ -170,15 +170,16 @@ void utisDeviceWorker::unPackDataRD(QStringList &list)
                 .arg(jiKeWenDu).arg(gongDianDianYa).arg(devState));
 
 
-    m_jsonData["luMianWenDu"] = luMianWenDu;
-    m_jsonData["shuiMoHouDu"] = shuiHouDu;
-    m_jsonData["fuBingHouDu"] = bingHouDu;
-    m_jsonData["fuXueHouDu"] = xueHouDu;
-    m_jsonData["shiHuaXiShu"] = shiHuaXiShu;
-    m_jsonData["luMianZhuangTai"] = biaoMianZhuangTai;
-    m_jsonData["kongQiWenDi"] = "/";
+    m_jsonData["roadTemperature"] = luMianWenDu;
+    m_jsonData["waterThickness"] = shuiHouDu;
+    m_jsonData["iceThickness"] = bingHouDu;
+    m_jsonData["snowThickness"] = xueHouDu;
+    m_jsonData["slipperyCoefficient"] = shiHuaXiShu;
+    m_jsonData["roadState"] = biaoMianZhuangTai;
+    m_jsonData["airTemperature"] = "/";
     m_jsonData["xiangDuiShiDu"] = "/";
-    m_jsonData["sheBeiZhuangTai"] = devState == "00" ? "0" : "2";      // 设备状态
+
+    m_jsonData["deviceState"] = devState == "00" ? "0" : "2";      // 设备状态
     m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
 }
@@ -196,11 +197,11 @@ void utisDeviceWorker::unPackDataVD5(QStringList &list)
                 .arg(min1NengJianDu).arg(min10NengJianDu).arg(nengJianDuQuShi)
                 .arg(devState));
 
-    m_jsonData["1MinNengJianDu"] = min1NengJianDu;
-    m_jsonData["10MinNengJianDu"] = min10NengJianDu;
-    m_jsonData["shuJuBianHuaQuShi"] = nengJianDuQuShi;
-    m_jsonData["tianQiXiangXianCode"] = "/";
-    m_jsonData["sheBeiZhuangTai"] = devState == "0" ? "0" : "3";      // 设备状态
+    m_jsonData["visibility1Min"] = min1NengJianDu;
+    m_jsonData["visibility10Min"] = min10NengJianDu;
+    m_jsonData["dataVariationTrend"] = nengJianDuQuShi;
+    m_jsonData["weatherCode"] = "/";
+    m_jsonData["deviceState"] = devState == "0" ? "0" : "3";      // 设备状态
     m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
@@ -220,11 +221,11 @@ void utisDeviceWorker::unPackDataVD6(QStringList &list)
                 .arg(min1NengJianDu).arg(min10NengJianDu).arg(tianQiDaiMa)
                 .arg(nengJianDuQuShi).arg(devState));
 
-    m_jsonData["1MinNengJianDu"] = min1NengJianDu;
-    m_jsonData["10MinNengJianDu"] = min10NengJianDu;
-    m_jsonData["shuJuBianHuaQuShi"] = nengJianDuQuShi;
-    m_jsonData["tianQiXiangXianCode"] = tianQiDaiMa;
-    m_jsonData["sheBeiZhuangTai"] = devState == "0" ? "0" : "3";      // 设备状态
+    m_jsonData["visibility1Min"] = min1NengJianDu;
+    m_jsonData["visibility10Min"] = min10NengJianDu;
+    m_jsonData["dataVariationTrend"] = nengJianDuQuShi;
+    m_jsonData["weatherCode"] = tianQiDaiMa;
+    m_jsonData["deviceState"] = devState == "0" ? "0" : "3";      // 设备状态
     m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
@@ -233,19 +234,19 @@ void utisDeviceWorker::unPackDataVD6(QStringList &list)
 void utisDeviceWorker::unPackDataHY3000(QStringList &list)
 {
     //emit showMsg(QString("list长度：%1").arg(list.size()));
-    m_jsonData["luMianWenDu"] = list.at(7).toInt() / 10.0;
-    m_jsonData["shuiMoHouDu"] = "/";
-    m_jsonData["fuBingHouDu"] = "/";
-    m_jsonData["fuXueHouDu"] = "/";
-    m_jsonData["shiHuaXiShu"] = "/";
-    m_jsonData["luMianZhuangTai"] = "/";
-    m_jsonData["kongQiWenDi"] = "/";
+    m_jsonData["roadTemperature"] = list.at(7).toInt() / 10.0;
+    m_jsonData["waterThickness"] = "/";
+    m_jsonData["iceThickness"] = "/";
+    m_jsonData["snowThickness"] = "/";
+    m_jsonData["slipperyCoefficient"] = "/";
+    m_jsonData["roadState"] = "/";
+    m_jsonData["airTemperature"] = "/";
     m_jsonData["xiangDuiShiDu"] = "/";
-    m_jsonData["1MinNengJianDu"] = list.at(1);
-    m_jsonData["10MinNengJianDu"] = list.at(4);
-    m_jsonData["shuJuBianHuaQuShi"] = "/";
-    m_jsonData["tianQiXiangXianCode"] = "/";
-    m_jsonData["sheBeiZhuangTai"] = "0";      // 设备状态
+    m_jsonData["visibility1Min"] = list.at(1);
+    m_jsonData["visibility10Min"] = list.at(4);
+    m_jsonData["dataVariationTrend"] = "/";
+    m_jsonData["weatherCode"] = "/";
+    m_jsonData["deviceState"] = "0";      // 设备状态
     m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
@@ -253,14 +254,15 @@ void utisDeviceWorker::unPackDataHY3000(QStringList &list)
 
 void utisDeviceWorker::unPackDataSKY3(QStringList &list)
 {
-    m_jsonData["wenDu"] = list.at(6).toFloat();
-    m_jsonData["shiDu"] = list.at(7).toFloat();
-    m_jsonData["qiYa"] = list.at(8).toFloat();
-    m_jsonData["fengSu"] =list.at(9).toFloat();
-    m_jsonData["fengXiang"] = list.at(10).toInt();
-    m_jsonData["jiangYuLiang"] = list.at(12).toFloat();
-    m_jsonData["sheBeiZhuangTai"] = "0";                        // 设备状态
-    m_jsonData["yuGanZhuangTai"] = list.at(13).toInt();;        // 雨感状态
+    m_jsonData["temperature"] = list.at(6).toFloat();
+    m_jsonData["humidness"] = list.at(7).toFloat();
+    m_jsonData["airPressure"] = list.at(8).toFloat();
+    m_jsonData["windSpeed"] =list.at(9).toFloat();
+    m_jsonData["windDirection"] = list.at(10).toInt();
+    m_jsonData["precipitation"] = list.at(12).toFloat();
+    m_jsonData["rainingState"] = list.at(13).toInt();;        // 雨感状态
+
+    m_jsonData["deviceState"] = "0";                        // 设备状态
     m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
@@ -298,13 +300,13 @@ void utisDeviceWorker::unPackDataMWS600()
 
     // 气压
     float qiYa = hex2Float(QString(dataGram.left(8)));
-    qDebug() << qiYa;
     dataGram.remove(0, 8);
 
     // 预留2字节
     dataGram.remove(0, 4);
 
     // 降雨状态
+    //qDebug() << dataGram.left(2);
     int JinagYuState = dataGram.left(2).toInt(nullptr, 16);
     dataGram.remove(0, 2);
 
@@ -323,14 +325,15 @@ void utisDeviceWorker::unPackDataMWS600()
                       .arg(devState).arg(windDirc).arg(windSpeed)
                       .arg(wenDu).arg(shiDu).arg(qiYa)
                      .arg(JinagYuState).arg(JinagYuQiangDu).arg(LeiJiYuLiang));
-    m_jsonData["wenDu"] = QString::number(wenDu, 'f', 2);
-    m_jsonData["shiDu"] = QString::number(shiDu, 'f', 2);
-    m_jsonData["qiYa"] = QString::number(qiYa, 'f', 2);
-    m_jsonData["fengSu"] = windSpeed;
-    m_jsonData["fengXiang"] = windDirc;
-    m_jsonData["jiangYuLiang"] = QString::number(LeiJiYuLiang, 'f', 2);
-    m_jsonData["sheBeiZhuangTai"] = "0";            // 设备状态
-    m_jsonData["yuGanZhuangTai"] = JinagYuState;    // 雨感状态
+    m_jsonData["temperature"] = QString::number(wenDu, 'f', 2);
+    m_jsonData["humidness"] = QString::number(shiDu, 'f', 2);
+    m_jsonData["airPressure"] = QString::number(qiYa, 'f', 2);
+    m_jsonData["windSpeed"] = windSpeed;
+    m_jsonData["windDirection"] = windDirc;
+    m_jsonData["precipitation"] = QString::number(LeiJiYuLiang, 'f', 2);
+    m_jsonData["rainingState"] = JinagYuState;    // 雨感状态
+
+    m_jsonData["deviceState"] = "0";            // 设备状态
     m_jsonData["datetime"] = QDateTime::currentDateTime().toString("yyyyMMddhhmm00");             // 观测时间
 
     emit signalDataUpdate(QJsonDocument(m_jsonData).toJson());
